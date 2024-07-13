@@ -1,0 +1,173 @@
+[
+    {
+        "id": "49b045c2e71bae77",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2eff6fea.0fc58",
+        "type": "http request",
+        "z": "49b045c2e71bae77",
+        "name": "Send a request to get labels",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 250,
+        "y": 400,
+        "wires": [
+            [
+                "d8950b07.fd9698",
+                "84eedf0780ad5d04"
+            ]
+        ]
+    },
+    {
+        "id": "b990a8a7.acd6e8",
+        "type": "function",
+        "z": "49b045c2e71bae77",
+        "name": "Make a request for the Google Cloud Vision API to get labels",
+        "func": "var image = {content: msg.payload.toString('base64')};\nvar features = {type: 'LABEL_DETECTION', maxResults: 10};\nvar imageContext = {languageHints: 'ja'};\nvar request = {image: image, features: features, imageContext: imageContext};\nvar requests = {requests: request};\nmsg.payload = requests;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 260,
+        "wires": [
+            [
+                "c16d905.25e967"
+            ]
+        ]
+    },
+    {
+        "id": "c16d905.25e967",
+        "type": "change",
+        "z": "49b045c2e71bae77",
+        "name": "Set url and headers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyC5lgRw62B8zLrUYOAqDdBqvBHCObe-mkE",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "Content-Type: application/json",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 210,
+        "y": 320,
+        "wires": [
+            [
+                "2eff6fea.0fc58"
+            ]
+        ]
+    },
+    {
+        "id": "d8950b07.fd9698",
+        "type": "function",
+        "z": "49b045c2e71bae77",
+        "name": "Report found labels",
+        "func": "// To skip messages like { \"responses\": [ {} ] }\nif (Object.keys(msg.payload.responses[0]).length < 1) {\n    return null;\n}\n\nvar labels = 'labels: ';\nvar labelAnnotations = msg.payload.responses[0].labelAnnotations;\nfor (var i = 0; i < labelAnnotations.length; i++) {\n    labels += labelAnnotations[i].description;\n    labels +=' (' + labelAnnotations[i].score + '), ';\n}\n\nmsg.payload = labels.slice(0, labels.length - 2);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 230,
+        "y": 460,
+        "wires": [
+            [
+                "a6e69d94.bd809"
+            ]
+        ]
+    },
+    {
+        "id": "52de210b.57645",
+        "type": "comment",
+        "z": "49b045c2e71bae77",
+        "name": "Replace 'API_KEY' with your API key",
+        "info": "",
+        "x": 480,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "39b9e997.d5a1b6",
+        "type": "comment",
+        "z": "49b045c2e71bae77",
+        "name": "Replace LABEL_DETECTION with another feature type if needed",
+        "info": "",
+        "x": 820,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "a6e69d94.bd809",
+        "type": "debug",
+        "z": "49b045c2e71bae77",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 270,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "fbe40c2581c66c6b",
+        "type": "fileinject",
+        "z": "49b045c2e71bae77",
+        "name": "",
+        "x": 240,
+        "y": 180,
+        "wires": [
+            [
+                "b990a8a7.acd6e8"
+            ]
+        ]
+    },
+    {
+        "id": "84eedf0780ad5d04",
+        "type": "debug",
+        "z": "49b045c2e71bae77",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 440,
+        "wires": []
+    }
+]
