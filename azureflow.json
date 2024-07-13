@@ -1,0 +1,144 @@
+[
+    {
+        "id": "326d226f8eb5d49f",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2fd0a3f.969ce5c",
+        "type": "inject",
+        "z": "326d226f8eb5d49f",
+        "name": "Register Payload",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "{\"deviceId\":\"AnuDevice\"}",
+        "payloadType": "json",
+        "x": 790,
+        "y": 600,
+        "wires": [
+            [
+                "6a913d9a.fa0844"
+            ]
+        ]
+    },
+    {
+        "id": "14a58301.e60a9d",
+        "type": "debug",
+        "z": "326d226f8eb5d49f",
+        "name": "Log",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 1300,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "f775e252.a49f2",
+        "type": "debug",
+        "z": "326d226f8eb5d49f",
+        "name": "Log",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 1300,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "228b0f18.7799c",
+        "type": "inject",
+        "z": "326d226f8eb5d49f",
+        "name": "Send Payload",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "{\"deviceId\":\"AnuDevice\",\"key\":\"cBB8fDVUeApRZWHu9ho22kfVuRcRCOKN/hMoI8Qh4mo=\",\"protocol\":\"http\",\"data\":\"{hello welcome to azure}\"}",
+        "payloadType": "json",
+        "x": 780,
+        "y": 540,
+        "wires": [
+            [
+                "95789379.e44d2"
+            ]
+        ]
+    },
+    {
+        "id": "c2825fc8.d6323",
+        "type": "debug",
+        "z": "326d226f8eb5d49f",
+        "name": "Log",
+        "active": true,
+        "console": "false",
+        "complete": "true",
+        "x": 1300,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "95789379.e44d2",
+        "type": "azureiothub",
+        "z": "326d226f8eb5d49f",
+        "name": "Azure IoT Hub",
+        "protocol": "http",
+        "x": 990,
+        "y": 540,
+        "wires": [
+            [
+                "f775e252.a49f2"
+            ]
+        ]
+    },
+    {
+        "id": "6a913d9a.fa0844",
+        "type": "azureiothubregistry",
+        "z": "326d226f8eb5d49f",
+        "name": "Azure IoT Hub Registry",
+        "x": 1020,
+        "y": 600,
+        "wires": [
+            [
+                "14a58301.e60a9d"
+            ]
+        ]
+    },
+    {
+        "id": "817f33a3.ddf5f",
+        "type": "azureiothubreceiver",
+        "z": "326d226f8eb5d49f",
+        "name": "Azure IoT Hub Receiver",
+        "x": 1010,
+        "y": 700,
+        "wires": [
+            [
+                "c2825fc8.d6323"
+            ]
+        ]
+    }
+]
